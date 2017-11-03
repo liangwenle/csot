@@ -1,6 +1,6 @@
 <template>
   <div v-show="copyVisible" class="myDialog"  draggable="true" @dragstart="dragstart" @dragend="drag"
-  style="top:20px;left:20px;"
+  style="top:300px;left:200px;"
   >
   <div class="close" @click="close">
     <i class="el-icon-close"></i>
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     dragstart(e) {
-      this.$emit("update:visible", false);
+      // this.$emit("update:visible", false);
       
       this.sx = e.clientX;
       this.sy = e.clientY;
@@ -49,7 +49,7 @@ export default {
 
       el.style.top = `${e.clientY-this.sy+topNo}px`;
       el.style.left = `${e.clientX-this.sx+leftNo}px`;
-      this.$emit("update:visible", true);
+      // this.$emit("update:visible", true);
       
     },
     close() {
