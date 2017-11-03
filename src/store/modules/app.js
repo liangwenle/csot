@@ -2,7 +2,7 @@ const app = {
   state: {
     sidebar: {},
     visitedViews: [],
-    abc:null,
+    abc:2,
   },
   mutations: {
     ABC(state, data){
