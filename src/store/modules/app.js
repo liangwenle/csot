@@ -1,9 +1,13 @@
 const app = {
   state: {
     sidebar: {},
-    visitedViews: []
+    visitedViews: [],
+    abc:null,
   },
   mutations: {
+    ABC(state, data){
+      state.abc = data;
+    },
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return;
       state.visitedViews.push({ name: view.name, path: view.path });
@@ -20,9 +24,6 @@ const app = {
     }
   },
   actions: {
-    ToggleSideBar({ commit }) {
-      commit("TOGGLE_SIDEBAR");
-    },
     addVisitedViews({ commit }, view) {
       commit("ADD_VISITED_VIEWS", view);
     },
@@ -31,6 +32,10 @@ const app = {
         commit("DEL_VISITED_VIEWS", view);
         resolve([...state.visitedViews]);
       });
+    },
+    setAbc({ commit }, data){
+      commit("ABC", data);
+      
     }
   }
 };
