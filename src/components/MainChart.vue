@@ -4,20 +4,26 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import echarts from "echarts";
 import "echarts/extension/bmap/bmap";
-import {gdJson} from "@/assets/data";
-
+import { gdJson } from "@/assets/data";
 
 export default {
   name: "MainChart",
   components: {},
   computed: {},
+
   data() {
     return {};
   },
+  computed: {
+    ...mapGetters([])
+  },
   methods: {
+    ...mapActions(["setAbc"]),
+
     mapTest() {
       let option = {
         // 加载 bmap 组件
@@ -128,11 +134,10 @@ export default {
           value: [114.07, 22.62]
         }
       ];
-   
 
       echarts.registerMap("广东", gdJson);
 
-     let option = {
+      let option = {
         backgroundColor: "#181b3a",
         geo: {
           map: "广东",
@@ -399,14 +404,14 @@ export default {
           }
         ]
       };
-       // 基于准备好的dom，初始化echarts实例
+      // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById("mainChart"));
       // 绘制图表
       myChart.setOption(option);
     }
   },
   mounted() {
-    this.mapTestB()
+    this.mapTestB();
   }
 };
 </script>

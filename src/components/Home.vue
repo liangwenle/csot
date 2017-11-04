@@ -18,33 +18,31 @@
 </template>
 
 <script>
-  import { mapGetters,mapActions } from "vuex";
-  import echarts from "echarts";
-  import TopNav from "@/components/TopNav";
-  import TopTitle from "@/components/TopTitle";
-  import MainChart from "@/components/MainChart";
-  import LeftTarget from "@/components/LeftTarget";
-  import MyDialog from "@/components/MyDialog";
+import { mapGetters, mapActions } from "vuex";
+import echarts from "echarts";
+import TopNav from "@/components/TopNav";
+import TopTitle from "@/components/TopTitle";
+import MainChart from "@/components/MainChart";
+import LeftTarget from "@/components/LeftTarget";
+import MyDialog from "@/components/MyDialog";
 
-  export default {
-    name: "Home",
-    components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog },
+export default {
+  name: "Home",
+  components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog },
 
-    data() {
-      return {
-        dialogVisible: true
-      };
-    },
-    computed: {
-      ...mapGetters(['getabc'])
-    },
-    methods: {
-      ...mapActions([
-        "setAbc"
-      ])
-    },
-    mounted() {}
-  };
+  data() {
+    return {
+      dialogVisible: true
+    };
+  },
+  computed: {
+    ...mapGetters(["getabc"])
+  },
+  methods: {
+    ...mapActions(["setAbc"]),
+  },
+  mounted() {}
+};
 </script>
 <style scoped>
 

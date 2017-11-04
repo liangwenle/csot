@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "TopTitle",
   components: {},
@@ -13,7 +15,12 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  computed: {
+    ...mapGetters(["getabc"])
+  },
+  methods: {
+    ...mapActions(["setAbc"])
+  },
   mounted() {}
 };
 </script>

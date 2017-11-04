@@ -16,18 +16,24 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import countTo from "vue-count-to";
 export default {
   name: "LeftTarget",
   components: { countTo },
   computed: {},
-  data() {
-    return { 
-      endVal: 234248845644560949,
-      timer : null
-     };
+  computed: {
+    ...mapGetters([])
   },
+  data() {
+    return {
+      endVal: 234248845644560949,
+      timer: null
+    };
+  },
+
   methods: {
+    ...mapActions([])
   },
   mounted() {
     /* this.$nextTick(() => {

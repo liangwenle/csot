@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: "TopNav",
   components: {},
@@ -24,7 +26,12 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  computed: {
+    ...mapGetters(["getabc"])
+  },
+  methods: {
+    ...mapActions(["setAbc"])
+  },
   mounted() {}
 };
 </script>
@@ -36,15 +43,14 @@ export default {
   top: 57px;
   width: 100%;
   height: 40px;
- 
 }
-#topIcons{
+#topIcons {
   position: absolute;
   top: -40px;
   right: 15px;
 }
-#ctIcons{
-   display: flex;
+#ctIcons {
+  display: flex;
   justify-content: flex-end;
   padding-right: 15px;
 }
