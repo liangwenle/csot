@@ -60,4 +60,8 @@ i {
   padding: 0 7px;
   font-size: 23px;
 }
+i:hover{
+  cursor:pointer;
+  color: #7f88e6;
+}
 </style>

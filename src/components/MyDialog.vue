@@ -81,4 +81,7 @@ export default {
   background: #20234c;
   color: #999;
 }
+.close:hover{
+  cursor: pointer;
+}
 </style>
