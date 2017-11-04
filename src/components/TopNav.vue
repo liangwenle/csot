@@ -1,7 +1,7 @@
 <template>
   <div id="topNav">
     <div id="topIcons">
-      <i class="fa fa-user"></i>
+      <i @click="setDiaLogs(['a',true])" class="fa fa-user"></i>
       <i class="fa fa-sign-out"></i>
       <i class="fa fa-question-circle"></i>
     </div>
@@ -27,10 +27,10 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["getabc"])
+    ...mapGetters(["diaLogs"])
   },
   methods: {
-    ...mapActions(["setAbc"])
+    ...mapActions(["setDiaLogs"])
   },
   mounted() {}
 };

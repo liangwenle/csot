@@ -8,9 +8,9 @@
     <TopNav></TopNav>
     <LeftTarget></LeftTarget>
     <!-- 浮动弹框 -->
-    <MyDialog :visible.sync="dialogVisible">
-      <h1 slot="header">这里可能是一个页面标题{{getabc}}</h1>
-        <p @click="setAbc(++getabc)">主要内容的一个段落。</p>
+    <MyDialog :visible.sync="diaLogs.a">
+      <h1 slot="header">这里可能是一个页面标题</h1>
+        <p >主要内容的一个段落。</p>
         <p>另一个主要段落。</p>
         <p slot="footer">这里有一些联系信息</p>
     </MyDialog>
@@ -36,10 +36,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getabc"])
+    ...mapGetters(["diaLogs"])
   },
   methods: {
-    ...mapActions(["setAbc"]),
+    ...mapActions(["setDiaLogs"]),
   },
   mounted() {}
 };

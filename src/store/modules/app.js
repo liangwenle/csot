@@ -2,11 +2,16 @@ const app = {
   state: {
     sidebar: {},
     visitedViews: [],
-    abc:2,
+    logs: {
+      a: false,
+      b: false,
+      c: false,
+      d: false
+    }
   },
   mutations: {
-    ABC(state, data){
-      state.abc = data;
+    LOGS(state, data) {
+      state.logs[data[0]] = data[1];
     },
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return;
@@ -33,9 +38,8 @@ const app = {
         resolve([...state.visitedViews]);
       });
     },
-    setAbc({ commit }, data){
-      commit("ABC", data);
-      
+    setDiaLogs({ commit }, data) {
+      commit("LOGS", data);
     }
   }
 };

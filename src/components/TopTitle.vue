@@ -16,10 +16,10 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["getabc"])
+    ...mapGetters([])
   },
   methods: {
-    ...mapActions(["setAbc"])
+    ...mapActions([])
   },
   mounted() {}
 };

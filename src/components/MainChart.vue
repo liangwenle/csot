@@ -22,7 +22,7 @@ export default {
     ...mapGetters([])
   },
   methods: {
-    ...mapActions(["setAbc"]),
+    ...mapActions([]),
 
     mapTest() {
       let option = {
