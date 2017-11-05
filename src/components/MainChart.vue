@@ -171,10 +171,6 @@ export default {
           ]
         },
         series: [
-          //  {
-          //   type: "map",
-          //   map: "广东"
-          // },
           {
             type: "lines",
             coordinateSystem: "geo",
