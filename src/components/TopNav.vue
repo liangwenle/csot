@@ -127,7 +127,13 @@ export default {
       }
     },
     ckmeunL1(l1, i) {
-      l1.show = true;
+      this.meuns.map((itemm,index)=>{
+        if(i==index){
+          l1.show = !l1.show;
+        }else{
+          itemm.show = false;
+        }
+      })
     },
     ckmeunL2(l2, j, l1, i) {
       l1.show = false;

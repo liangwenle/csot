@@ -8,7 +8,8 @@ import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import echarts from "echarts";
 import "echarts/extension/bmap/bmap";
-import { gdJson } from "@/assets/data";
+import  'echarts/map/js/china' 
+import guangdong from 'echarts/map/js/province/guangdong' 
 
 export default {
   name: "MainChart",
@@ -135,7 +136,7 @@ export default {
         }
       ];
 
-      echarts.registerMap("广东", gdJson);
+      // echarts.registerMap("广东", gdJson);
 
       let option = {
         backgroundColor: "#181b3a",
@@ -170,6 +171,10 @@ export default {
           ]
         },
         series: [
+          //  {
+          //   type: "map",
+          //   map: "广东"
+          // },
           {
             type: "lines",
             coordinateSystem: "geo",
@@ -408,10 +413,22 @@ export default {
       let myChart = echarts.init(document.getElementById("mainChart"));
       // 绘制图表
       myChart.setOption(option);
+    },
+    testmapjs() {
+      let chart = echarts.init(document.getElementById("mainChart"));
+      chart.setOption({
+        series: [
+          {
+            type: "map",
+            map: "广东"
+          }
+        ]
+      });
     }
   },
   mounted() {
     this.mapTestB();
+    // this.testmapjs();
   }
 };
 </script>
