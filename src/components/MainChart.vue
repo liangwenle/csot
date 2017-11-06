@@ -18,7 +18,7 @@ export default {
   computed: {},
 
   data() {
-    return {};
+    return { chart: null };
   },
   computed: {
     ...mapGetters([])
@@ -412,8 +412,8 @@ export default {
       myChart.setOption(option);
     },
     testmapjs() {
-      let chart = echarts.init(document.getElementById("mainChart"));
-      chart.setOption({
+      // let chart = echarts.init(document.getElementById("mainChart"));
+      this.chart.setOption({
         series: [
           {
             type: "map3D",
@@ -444,8 +444,11 @@ export default {
   },
   mounted() {
     // this.mapTestB();
-    this.testmapjs();
     // this.testGl()
+    this.$nextTick(() => {
+      this.chart = echarts.init(document.getElementById("mainChart"));
+      this.testmapjs();
+    });
   }
 };
 </script>
