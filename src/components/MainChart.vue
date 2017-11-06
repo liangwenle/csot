@@ -10,7 +10,7 @@ import echarts from "echarts";
 import "echarts-gl";
 import "echarts/extension/bmap/bmap";
 import "echarts/map/js/china";
-import guangdong from "echarts/map/js/province/guangdong";
+import "echarts/map/js/province/guangdong";
 
 export default {
   name: "MainChart",
