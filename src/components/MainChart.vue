@@ -7,9 +7,10 @@
 import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import echarts from "echarts";
+import "echarts-gl";
 import "echarts/extension/bmap/bmap";
-import  'echarts/map/js/china' 
-import guangdong from 'echarts/map/js/province/guangdong' 
+import "echarts/map/js/china";
+import guangdong from "echarts/map/js/province/guangdong";
 
 export default {
   name: "MainChart",
@@ -415,16 +416,36 @@ export default {
       chart.setOption({
         series: [
           {
-            type: "map",
+            type: "map3D",
             map: "广东"
+          }
+        ]
+      });
+    },
+    testGl() {
+      let chart = echarts.init(document.getElementById("mainChart"));
+      chart.setOption({
+        grid3D: {},
+        xAxis3D: {},
+        yAxis3D: {},
+        zAxis3D: {},
+        series: [
+          {
+            type: "scatter3D",
+            symbolSize: 50,
+            data: [[-1, -1, -1], [0, 0, 0], [1, 1, 1]],
+            itemStyle: {
+              opacity: 1
+            }
           }
         ]
       });
     }
   },
   mounted() {
-    this.mapTestB();
-    // this.testmapjs();
+    // this.mapTestB();
+    this.testmapjs();
+    // this.testGl()
   }
 };
 </script>

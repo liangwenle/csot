@@ -36,12 +36,12 @@ export default {
     ...mapActions([])
   },
   mounted() {
-    /* this.$nextTick(() => {
+    this.$nextTick(() => {
       this.timer = setInterval(()=>{
         this.endVal += 1839
         this.$refs.example.start();
       },8000) 
-    }); */
+    });
   }
 };
 </script>

@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.17.0",
     "echarts": "^3.7.2",
+    "echarts-gl": "^1.0.0-beta.5",
     "element-ui": "^2.0.3",
     "flex.css": "^1.1.7",
     "font-awesome": "^4.7.0",
