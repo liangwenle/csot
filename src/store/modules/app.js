@@ -7,11 +7,15 @@ const app = {
       b: false,
       c: false,
       d: false
-    }
+    },
+    chartType: null
   },
   mutations: {
     LOGS(state, data) {
       state.logs[data[0]] = data[1];
+    },
+    CHARTTYPE(state, data) {
+      state.chartType = data;
     },
     ADD_VISITED_VIEWS: (state, view) => {
       if (state.visitedViews.some(v => v.path === view.path)) return;
@@ -40,6 +44,9 @@ const app = {
     },
     setDiaLogs({ commit }, data) {
       commit("LOGS", data);
+    },
+    setChartType({ commit }, data){
+      commit("CHARTTYPE", data);
     }
   }
 };

@@ -30,6 +30,7 @@
           </div>
         </div>
       </div>
+      <div>{{chartType}}</div>
     </div>
     
   </div>
@@ -115,25 +116,32 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["diaLogs"])
+    ...mapGetters(["diaLogs", "chartType"])
   },
   methods: {
-    ...mapActions(["setDiaLogs"]),
+    ...mapActions(["setDiaLogs", "setChartType"]),
     ckCT(i) {
-      if(i==3){
-        this.setDiaLogs(['a',true])
-      }else if (i == 4) {
+      if(i==0){
+        this.setChartType(0);
+      }
+      else if (i == 1) {
+        this.setChartType(1);
+      } else if (i == 2) {
+        this.setChartType(2);
+      } else if (i == 3) {
+        this.setDiaLogs(["a", true]);
+      } else if (i == 4) {
         this.meunShow = !this.meunShow;
       }
     },
     ckmeunL1(l1, i) {
-      this.meuns.map((itemm,index)=>{
-        if(i==index){
+      this.meuns.map((itemm, index) => {
+        if (i == index) {
           l1.show = !l1.show;
-        }else{
+        } else {
           itemm.show = false;
         }
-      })
+      });
     },
     ckmeunL2(l2, j, l1, i) {
       l1.show = false;

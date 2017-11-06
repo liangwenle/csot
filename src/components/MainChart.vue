@@ -1,6 +1,10 @@
 <template>
-  <div id="mainChart">
-  </div>
+ <div style="width: 100%;height: 100%;">
+    <div v-show="show==1" id="mainChart"></div>
+    <div v-show="show==2" id="chart"></div>
+ </div>
+  
+  
 </template>
 
 <script>
@@ -16,15 +20,138 @@ export default {
   name: "MainChart",
   components: {},
   computed: {},
-
   data() {
-    return { chart: null };
+    return {
+      chart: null,
+      show: 1
+    };
   },
   computed: {
-    ...mapGetters([])
+    ...mapGetters(["chartType"])
+  },
+  watch: {
+    chartType(n, o) {
+      this.chart.clear();
+
+      console.log(this.chart.isDisposed());
+      console.log(123123);
+      console.log(this.chart.getOption());
+      if (n == 1) {
+        this.show = 1;
+        this.$nextTick(() => {
+          this.mapTest();
+          this.chart.resize();
+        });
+      } else if (n == 2) {
+        this.show = 1;
+        this.$nextTick(() => {
+          this.mapTestB();
+          this.chart.resize();
+        });
+      } else if (n == 0) {
+        this.show = 2;
+        this.$nextTick(() => {
+          this.testGl();
+          this.chart.resize();
+        });
+      }
+    }
   },
   methods: {
-    ...mapActions([]),
+    ...mapActions(["setChartType"]),
+
+    initChart() {
+      function area(name, color) {
+        let a = {
+          name: name,
+          selected: true,
+          itemStyle: {
+            emphasis: {
+              areaColor: color,
+              borderColor: "#f47920",
+              borderWidth: 1
+            }
+          }
+        };
+        return a;
+      }
+      let geodata = [
+        {
+          name: "广州市",
+          value: [113.43, 23.26]
+        },
+        {
+          name: "佛山市",
+          value: [112.98, 23.01]
+        },
+        {
+          name: "东莞市",
+          value: [113.85, 23.01]
+        },
+        {
+          name: "中山市",
+          value: [113.38, 22.52]
+        },
+        {
+          name: "江门市",
+          value: [112.7, 22.31]
+        },
+        {
+          name: "阳江市",
+          value: [111.9, 21.95]
+        },
+        {
+          name: "茂名市",
+          value: [110.99, 21.68]
+        },
+        {
+          name: "湛江市",
+          value: [110.24, 21.25]
+        }
+      ];
+      let geodata1 = [
+        {
+          name: "深圳市",
+          value: [114.07, 22.62]
+        }
+      ];
+
+      // echarts.registerMap("广东", gdJson);
+
+      let option = {
+        backgroundColor: "#181b3a",
+        geo: {
+          map: "广东",
+          label: {
+            emphasis: {
+              show: true,
+              color: "#fff"
+            }
+          },
+          roam: true,
+          zlevel: 1,
+          itemStyle: {
+            normal: {
+              areaColor: "#031525",
+              borderColor: "#3B5077"
+            },
+            emphasis: {
+              areaColor: "rgba(233,0,200,0.3)",
+              shadowColor: "rgba(222, 121, 0, 0.5)",
+              shadowBlur: 10,
+            }
+          },
+          regions: [
+            area("深圳市", "#694d9f"),
+            area("佛山市", "#45224a"),
+            area("茂名市", "#45224a")
+          ]
+        },
+        series: []
+      };
+      
+      this.chart.setOption(option, { notMerge: true });
+    },
 
     mapTest() {
       let option = {
@@ -52,10 +179,10 @@ export default {
         ]
       };
 
-      let myChart = echarts.init(document.getElementById("mainChart"));
-      myChart.setOption(option);
+      // let myChart = echarts.init(document.getElementById("mainChart"));
+      this.chart.setOption(option, { notMerge: true });
       // 获取百度地图实例，使用百度地图自带的控件
-      let bmap = myChart
+      let bmap = this.chart
         .getModel()
         .getComponent("bmap")
         .getBMap();
@@ -407,9 +534,9 @@ export default {
         ]
       };
       // 基于准备好的dom，初始化echarts实例
-      let myChart = echarts.init(document.getElementById("mainChart"));
+      // let myChart = echarts.init(document.getElementById("mainChart"));
       // 绘制图表
-      myChart.setOption(option);
+      this.chart.setOption(option, { notMerge: true });
     },
     testmapjs() {
       // let chart = echarts.init(document.getElementById("mainChart"));
@@ -423,7 +550,7 @@ export default {
       });
     },
     testGl() {
-      let chart = echarts.init(document.getElementById("mainChart"));
+      let chart = echarts.init(document.getElementById("chart"));
       chart.setOption({
         grid3D: {},
         xAxis3D: {},
@@ -443,18 +570,18 @@ export default {
     }
   },
   mounted() {
-    // this.mapTestB();
-    // this.testGl()
     this.$nextTick(() => {
       this.chart = echarts.init(document.getElementById("mainChart"));
-      this.testmapjs();
+      // this.testmapjs();
+      this.initChart();
     });
   }
 };
 </script>
 
 <style scoped>
-#mainChart {
+#mainChart,
+#chart {
   background: #444;
   width: 100%;
   height: 100%;
