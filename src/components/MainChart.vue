@@ -1,7 +1,10 @@
 <template>
  <div style="width: 100%;height: 100%;">
-    <div v-show="show==1" id="mainChart"></div>
-    <div v-show="show==2" id="chart"></div>
+    <div v-show="show==0" id="mainChart"></div>
+    <div v-show="show==1" id="chart"></div>
+    <div v-show="show==2" id="bmapchart"></div>
+    <div v-show="show==3" id="mapchart"></div>
+    <div v-show="show==4" id="glchart"></div>
  </div>
   
   
@@ -11,6 +14,8 @@
 import { mapGetters, mapActions } from "vuex";
 import axios from "axios";
 import echarts from "echarts";
+import lxtData from "@/assets/lxtData";
+
 import "echarts-gl";
 import "echarts/extension/bmap/bmap";
 import "echarts/map/js/china";
@@ -22,21 +27,53 @@ export default {
   computed: {},
   data() {
     return {
+      show: null,
+      domIds: ["mainChart", "chart", "bmapchart", "mapchart", "glchart"],
+      mainChart: null,
       chart: null,
-      show: 1
+      bmapchart: null,
+      mapchart: null,
+      glchart: null
     };
   },
   computed: {
     ...mapGetters(["chartType"])
   },
   watch: {
-    chartType(n, o) {
-      this.chart.clear();
-
+    show(n, o) {
+      /*  this.chart.clear();
       console.log(this.chart.isDisposed());
-      console.log(123123);
-      console.log(this.chart.getOption());
-      if (n == 1) {
+      console.log(this.chart.getOption()); */
+      this.$nextTick(() => {
+        switch (n) {
+          case 0:
+            this.drowMainChart();
+            // this.chart.resize();
+            break;
+          case 1:
+            this.drowChart();
+            // this.chart.resize();
+            break;
+          case 2:
+            this.drowBMapChart();
+            this.setLX_Bmap();
+            break;
+          case 3:
+            this.drowMapChart();
+            break;
+          case 4:
+            this.drowGLChart();
+            break;
+          case 5:
+            break;
+          case 6:
+            break;
+          default:
+            break;
+        }
+      });
+
+      /* if (n == 1) {
         this.show = 1;
         this.$nextTick(() => {
           this.mapTest();
@@ -46,7 +83,6 @@ export default {
         this.show = 1;
         this.$nextTick(() => {
           this.mapTestB();
-          this.chart.resize();
         });
       } else if (n == 0) {
         this.show = 2;
@@ -54,13 +90,340 @@ export default {
           this.testGl();
           this.chart.resize();
         });
-      }
+      } */
+    },
+    chartType(n, o) {
+      this.show = n + 1;
     }
   },
   methods: {
     ...mapActions(["setChartType"]),
 
-    initChart() {
+    guangDongMapFormJS() {
+      this.chart.setOption({
+        series: [
+          {
+            type: "map3D",
+            map: "广东"
+          }
+        ]
+      });
+    },
+
+    setLX_Bmap() {
+      let data = lxtData;
+      let hStep = 300 / (data.length - 1);
+      let busLines = [].concat.apply(
+        [],
+        data.map(function(busLine, idx) {
+          return {
+            coords: busLine,
+            lineStyle: {
+              normal: {
+                color: echarts.color.modifyHSL(
+                  "#5A94DF",
+                  Math.round(hStep * idx)
+                )
+              }
+            }
+          };
+        })
+      );
+      let option = {
+        series: [
+          {
+            type: "lines",
+            coordinateSystem: "bmap",
+            polyline: true,
+            data: busLines,
+            silent: true,
+            lineStyle: {
+              normal: {
+                opacity: 0.3,
+                width: 1
+              }
+            },
+            progressiveThreshold: 500,
+            progressive: 100
+          },
+          {
+            type: "lines",
+            coordinateSystem: "bmap",
+            polyline: true,
+            data: busLines,
+            lineStyle: {
+              normal: {
+                width: 0.02
+              }
+            },
+            effect: {
+              constantSpeed: 40,
+              show: true,
+              trailLength: 0.02,
+              symbolSize: 2
+            },
+            zlevel: 1
+          },
+          {
+            name: "浙A95527",
+            type: "effectScatter",
+            coordinateSystem: "bmap",
+            zlevel: 2,
+            rippleEffect: {
+              brushType: "stroke"
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "right",
+                formatter: "{b}"
+              }
+            },
+            symbolSize: function(val) {
+              return val[2] / 4;
+            },
+            showEffectOn: "render",
+            itemStyle: {
+              normal: {
+                color: "#f4e925",
+                shadowBlur: 10,
+                shadowColor: "#333"
+              }
+            },
+            data: [
+              {
+                name: "浙A95527-告警",
+                value: [120.102281, 30.281876, 50]
+              }
+            ]
+          },
+          {
+            name: "浙AGH2352",
+            type: "effectScatter",
+            coordinateSystem: "bmap",
+            zlevel: 2,
+            rippleEffect: {
+              brushType: "stroke"
+            },
+            label: {
+              normal: {
+                show: true,
+                position: "right",
+                formatter: "{b}"
+              }
+            },
+            symbolSize: function(val) {
+              return val[2] / 4;
+            },
+            showEffectOn: "render",
+            itemStyle: {
+              normal: {
+                color: "#ff2200",
+                shadowBlur: 10,
+                shadowColor: "#333"
+              }
+            },
+            data: [
+              {
+                name: "浙AGH2352-故障",
+                value: [120.155575, 30.314324, 70]
+              }
+            ]
+          }
+        ]
+      };
+      this.bmapchart.setOption(option);
+    },
+
+    initChart(name) {
+      let dom = document.getElementById(name);
+      let existInstance = echarts.getInstanceByDom(dom);
+      if (existInstance) {
+        return false;
+        echarts.dispose(existInstance);
+      }
+      this[name] = echarts.init(dom);
+    },
+    drowMainChart() {
+      let domId = "mainChart";
+      this.initChart(domId);
+    },
+    drowChart() {
+      let domId = "chart";
+      this.initChart(domId);
+    },
+    drowBMapChart() {
+      let domId = "bmapchart";
+      this.initChart(domId);
+
+      let option = {
+        // 加载 bmap 组件
+        bmap: {
+          // 百度地图中心经纬度
+          center: [120.184158, 30.28849],
+          // 百度地图缩放
+          zoom: 12,
+          // 是否开启拖拽缩放，可以只设置 'scale' 或者 'move'
+          roam: true,
+          // 百度地图的自定义样式，见 http://developer.baidu.com/map/jsdevelop-11.htm
+          // mapStyle: {
+          //   style: "midnight"
+          // }
+          mapStyle: {
+            styleJson: [
+              {
+                featureType: "water",
+                elementType: "all",
+                stylers: {
+                  color: "#031628"
+                }
+              },
+              {
+                featureType: "land",
+                elementType: "geometry",
+                stylers: {
+                  color: "#000102"
+                }
+              },
+              {
+                featureType: "highway",
+                elementType: "all",
+                stylers: {
+                  visibility: "off"
+                }
+              },
+              {
+                featureType: "arterial",
+                elementType: "geometry.fill",
+                stylers: {
+                  color: "#000000"
+                }
+              },
+              {
+                featureType: "arterial",
+                elementType: "geometry.stroke",
+                stylers: {
+                  color: "#0b3d51"
+                }
+              },
+              {
+                featureType: "local",
+                elementType: "geometry",
+                stylers: {
+                  color: "#000000"
+                }
+              },
+              {
+                featureType: "railway",
+                elementType: "geometry.fill",
+                stylers: {
+                  color: "#000000"
+                }
+              },
+              {
+                featureType: "railway",
+                elementType: "geometry.stroke",
+                stylers: {
+                  color: "#08304b"
+                }
+              },
+              {
+                featureType: "subway",
+                elementType: "geometry",
+                stylers: {
+                  lightness: -70
+                }
+              },
+              {
+                featureType: "building",
+                elementType: "geometry.fill",
+                stylers: {
+                  color: "#000000"
+                }
+              },
+              {
+                featureType: "all",
+                elementType: "labels.text.fill",
+                stylers: {
+                  color: "#857f7f"
+                }
+              },
+              {
+                featureType: "all",
+                elementType: "labels.text.stroke",
+                stylers: {
+                  color: "#000000"
+                }
+              },
+              {
+                featureType: "building",
+                elementType: "geometry",
+                stylers: {
+                  color: "#022338"
+                }
+              },
+              {
+                featureType: "green",
+                elementType: "geometry",
+                stylers: {
+                  color: "#062032"
+                }
+              },
+              {
+                featureType: "boundary",
+                elementType: "all",
+                stylers: {
+                  color: "#465b6c"
+                }
+              },
+              {
+                featureType: "manmade",
+                elementType: "all",
+                stylers: {
+                  color: "#022338"
+                }
+              },
+              {
+                featureType: "point",
+                elementType: "all",
+                stylers: {
+                  visibility: "off"
+                }
+              },
+              {
+                featureType: "poi",
+                elementType: "all",
+                stylers: {
+                  color: "#93c47d",
+                  visibility: "off"
+                }
+              }
+            ]
+          }
+        },
+        series: [
+          {
+            type: "scatter",
+            // 使用百度地图坐标系
+            coordinateSystem: "bmap",
+            // 数据格式跟在 geo 坐标系上一样，每一项都是 [经度，纬度，数值大小，其它维度...]
+            data: [[120, 30, 1]]
+          }
+        ]
+      };
+
+      // let myChart = echarts.init(document.getElementById("mainChart"));
+      this[domId].setOption(option, { notMerge: true });
+      // 获取百度地图实例，使用百度地图自带的控件
+      let bmap = this[domId]
+        .getModel()
+        .getComponent("bmap")
+        .getBMap();
+      bmap.addControl(new BMap.MapTypeControl());
+    },
+    drowMapChart() {
+      let domId = "mapchart";
+      this.initChart(domId);
       function area(name, color) {
         let a = {
           name: name,
@@ -115,9 +478,6 @@ export default {
           value: [114.07, 22.62]
         }
       ];
-
-      // echarts.registerMap("广东", gdJson);
-
       let option = {
         backgroundColor: "#181b3a",
         geo: {
@@ -138,7 +498,7 @@ export default {
             emphasis: {
               areaColor: "rgba(233,0,200,0.3)",
               shadowColor: "rgba(222, 121, 0, 0.5)",
-              shadowBlur: 10,
+              shadowBlur: 10
             }
           },
           regions: [
@@ -149,409 +509,14 @@ export default {
         },
         series: []
       };
-      
-      this.chart.setOption(option, { notMerge: true });
-    },
 
-    mapTest() {
-      let option = {
-        // 加载 bmap 组件
-        bmap: {
-          // 百度地图中心经纬度
-          center: [120.13066322374, 30.240018034923],
-          // 百度地图缩放
-          zoom: 14,
-          // 是否开启拖拽缩放，可以只设置 'scale' 或者 'move'
-          roam: true,
-          // 百度地图的自定义样式，见 http://developer.baidu.com/map/jsdevelop-11.htm
-          mapStyle: {
-            style: "midnight"
-          }
-        },
-        series: [
-          {
-            type: "scatter",
-            // 使用百度地图坐标系
-            coordinateSystem: "bmap",
-            // 数据格式跟在 geo 坐标系上一样，每一项都是 [经度，纬度，数值大小，其它维度...]
-            data: [[120, 30, 1]]
-          }
-        ]
-      };
-
-      // let myChart = echarts.init(document.getElementById("mainChart"));
-      this.chart.setOption(option, { notMerge: true });
-      // 获取百度地图实例，使用百度地图自带的控件
-      let bmap = this.chart
-        .getModel()
-        .getComponent("bmap")
-        .getBMap();
-      bmap.addControl(new BMap.MapTypeControl());
+      this[domId].setOption(option, { notMerge: true });
+      this[domId].resize();
     },
-    echartTest() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = echarts.init(document.getElementById("mainChart"));
-      // 绘制图表
-      myChart.setOption({
-        title: {},
-        tooltip: {},
-        xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-        },
-        yAxis: {},
-        series: [
-          {
-            name: "销量",
-            type: "bar",
-            data: [5, 20, 36, 10, 10, 20]
-          }
-        ]
-      });
-    },
-    mapTestB() {
-      function area(name, color) {
-        var a = {
-          name: name,
-          selected: true,
-          itemStyle: {
-            emphasis: {
-              areaColor: color,
-              borderColor: "#f47920",
-              borderWidth: 1
-            }
-          }
-        };
-        return a;
-      }
-      var geodata = [
-        {
-          name: "广州市",
-          value: [113.43, 23.26]
-        },
-        {
-          name: "佛山市",
-          value: [112.98, 23.01]
-        },
-        {
-          name: "东莞市",
-          value: [113.85, 23.01]
-        },
-        {
-          name: "中山市",
-          value: [113.38, 22.52]
-        },
-        {
-          name: "江门市",
-          value: [112.7, 22.31]
-        },
-        {
-          name: "阳江市",
-          value: [111.9, 21.95]
-        },
-        {
-          name: "茂名市",
-          value: [110.99, 21.68]
-        },
-        {
-          name: "湛江市",
-          value: [110.24, 21.25]
-        }
-      ];
-      var geodata1 = [
-        {
-          name: "深圳市",
-          value: [114.07, 22.62]
-        }
-      ];
-
-      // echarts.registerMap("广东", gdJson);
-
-      let option = {
-        backgroundColor: "#181b3a",
-        geo: {
-          map: "广东",
-          label: {
-            emphasis: {
-              show: false
-            }
-          },
-          roam: true,
-          zlevel: 1,
-          itemStyle: {
-            normal: {
-              areaColor: "#031525",
-              borderColor: "#3B5077"
-            },
-            emphasis: {
-              areaColor: "#031525"
-            }
-          },
-          regions: [
-            area("深圳市", "#694d9f"),
-            area("东莞市", "#45224a"),
-            area("佛山市", "#45224a"),
-            area("广州市", "#45224a"),
-            area("中山市", "#45224a"),
-            area("江门市", "#45224a"),
-            area("阳江市", "#45224a"),
-            area("茂名市", "#45224a"),
-            area("湛江市", "#45224a")
-          ]
-        },
-        series: [
-          {
-            type: "lines",
-            coordinateSystem: "geo",
-            //polyline:true,
-            symbol: ["none", "triangle"],
-            zlevel: 2,
-            effect: {
-              show: true,
-              symbol: "roundRect",
-              period: 2,
-              delay: 100,
-              trailLength: 0.6,
-              symbolSize: 6
-            },
-            lineStyle: {
-              normal: {
-                color: {
-                  type: "linear",
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    {
-                      offset: 0,
-                      color: "#ed1941"
-                    },
-                    {
-                      offset: 1,
-                      color: "#ffce7b"
-                    }
-                  ],
-                  globalCoord: false
-                },
-                width: 1,
-                opacity: 0.8,
-                //type: 'dotted',
-                curveness: 0.2
-              }
-            },
-            data: [
-              {
-                coords: [
-                  //sz-东莞
-                  [114.07, 22.62],
-                  [113.85, 23.01]
-                ]
-              },
-              {
-                coords: [
-                  //dg-广州
-                  [113.85, 23.01],
-                  [113.43, 23.26]
-                ]
-              },
-              {
-                coords: [
-                  //sz-中山
-                  [114.07, 22.62],
-                  [113.38, 22.52]
-                ]
-              },
-              {
-                coords: [
-                  //gz-佛山
-                  [113.43, 23.26],
-                  [112.98, 23.01]
-                ]
-              },
-              {
-                coords: [
-                  //fs-江门
-                  [112.98, 23.01],
-                  [112.7, 22.31]
-                ]
-              },
-              {
-                coords: [
-                  //zs-江门
-                  [113.38, 22.52],
-                  [112.7, 22.31]
-                ]
-              },
-              {
-                coords: [
-                  //jm-阳江
-                  [112.7, 22.31],
-                  [111.9, 21.95]
-                ]
-              },
-              {
-                coords: [
-                  //yj-茂名
-                  [111.9, 21.95],
-                  [110.99, 21.68]
-                ]
-              },
-              {
-                coords: [
-                  //mm-湛江
-                  [110.99, 21.68],
-                  [110.24, 21.25]
-                ]
-              }
-            ]
-          },
-          {
-            type: "lines",
-            coordinateSystem: "geo",
-            //polyline:true,
-            symbol: ["none", "triangle"],
-            zlevel: 2,
-            effect: {
-              show: true,
-              symbol: "roundRect",
-              period: 1.5,
-              delay: 100,
-              trailLength: 0.6,
-              symbolSize: 6
-            },
-            lineStyle: {
-              normal: {
-                color: {
-                  type: "linear",
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    {
-                      offset: 0,
-                      color: "#ed1941"
-                    },
-                    {
-                      offset: 1,
-                      color: "#ffce7b"
-                    }
-                  ],
-                  globalCoord: false
-                },
-                width: 1,
-                opacity: 0.8,
-                //type: 'dotted',
-                curveness: 0.2
-              }
-            },
-            data: [
-              {
-                coords: [
-                  //jm-阳江
-                  [112.7, 22.31],
-                  [111.9, 21.95]
-                ]
-              },
-              {
-                coords: [
-                  //yj-茂名
-                  [111.9, 21.95],
-                  [110.99, 21.68]
-                ]
-              },
-              {
-                coords: [
-                  //mm-湛江
-                  [110.99, 21.68],
-                  [110.24, 21.25]
-                ]
-              }
-            ]
-          },
-          {
-            type: "effectScatter",
-            coordinateSystem: "geo",
-            showEffectOn: "render",
-            zlevel: 3,
-            symbol: "circle",
-            symbolSize: 5,
-            rippleEffect: {
-              brushType: "stroke",
-              period: 5,
-              scale: 7
-            },
-            label: {
-              normal: {
-                formatter: "{b}",
-                position: "right",
-                offset: [1, 6],
-                show: true,
-                textStyle: {
-                  color: "yellow"
-                }
-              }
-            },
-            itemStyle: {
-              normal: {
-                show: true,
-                color: "yellow"
-              }
-            },
-            data: geodata
-          },
-          {
-            type: "effectScatter",
-            coordinateSystem: "geo",
-            showEffectOn: "render",
-            zlevel: 3,
-            symbol: "circle",
-            symbolSize: 7,
-            rippleEffect: {
-              brushType: "stroke",
-              period: 2,
-              scale: 10
-            },
-            label: {
-              normal: {
-                formatter: "{b}",
-                position: "right",
-                //offset: [1, -3],
-                show: true,
-                textStyle: {
-                  color: "yellow"
-                }
-              }
-            },
-            itemStyle: {
-              normal: {
-                show: true,
-                color: "yellow"
-              }
-            },
-            data: geodata1
-          }
-        ]
-      };
-      // 基于准备好的dom，初始化echarts实例
-      // let myChart = echarts.init(document.getElementById("mainChart"));
-      // 绘制图表
-      this.chart.setOption(option, { notMerge: true });
-    },
-    testmapjs() {
-      // let chart = echarts.init(document.getElementById("mainChart"));
-      this.chart.setOption({
-        series: [
-          {
-            type: "map3D",
-            map: "广东"
-          }
-        ]
-      });
-    },
-    testGl() {
-      let chart = echarts.init(document.getElementById("chart"));
-      chart.setOption({
+    drowGLChart() {
+      let domId = "glchart";
+      this.initChart(domId);
+      this[domId].setOption({
         grid3D: {},
         xAxis3D: {},
         yAxis3D: {},
@@ -567,13 +532,16 @@ export default {
           }
         ]
       });
+      this[domId].resize();
     }
   },
   mounted() {
     this.$nextTick(() => {
-      this.chart = echarts.init(document.getElementById("mainChart"));
-      // this.testmapjs();
-      this.initChart();
+      // window.onresize = this.resizeAllChart;
+      this.show = 2;
+      // this.drowBMapChart();
+      // this.drowMapChart();
+      // this.drowGLChart();
     });
   }
 };
@@ -581,9 +549,20 @@ export default {
 
 <style scoped>
 #mainChart,
-#chart {
+#chart,
+#bmapchart,
+#mapchart,
+#glchart {
   background: #444;
   width: 100%;
   height: 100%;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

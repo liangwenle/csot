@@ -30,7 +30,6 @@
           </div>
         </div>
       </div>
-      <div>{{chartType}}</div>
     </div>
     
   </div>
@@ -201,6 +200,10 @@ export default {
 .meunL1 {
   margin-top: 10px;
   position: relative;
+}
+.meunL1Title:hover{
+  background: #fff;
+  color: #20234c;
 }
 .meunL1Title {
   border-radius: 50%;
