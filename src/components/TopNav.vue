@@ -8,7 +8,7 @@
     </div>
     <div id="ctIcons" >
       <div v-for="(meun,index) in ctmeuns" :key="index"
-      @click="ckCT(index)"
+      @click="ckCT(meun,index)"
        class="ctIcons">
         <el-badge :is-dot="meun.isdot" >
           <i :class="meun.icon"></i>
@@ -85,10 +85,10 @@ export default {
           show: false,
           level: [
             {
-              title: "厂区A"
+              title: "厂区 1"
             },
             {
-              title: "厂区B"
+              title: "厂区 2"
             }
           ]
         },
@@ -119,16 +119,16 @@ export default {
   },
   methods: {
     ...mapActions(["setDiaLogs", "setChartType"]),
-    ckCT(i) {
+    ckCT(meun,i) {
       if(i==0){
         this.setChartType(0);
-      }
-      else if (i == 1) {
+      } else if (i == 1) {
         this.setChartType(1);
       } else if (i == 2) {
         this.setChartType(2);
       } else if (i == 3) {
         this.setDiaLogs(["a", true]);
+        meun.isdot = false;
       } else if (i == 4) {
         this.meunShow = !this.meunShow;
       }
@@ -141,9 +141,20 @@ export default {
           itemm.show = false;
         }
       });
+      switch (i){
+        case 0:
+          this.setChartType(4)
+        break;
+        default:
+        break
+      }
+
     },
     ckmeunL2(l2, j, l1, i) {
       l1.show = false;
+      if(i==1){
+          this.setChartType(1)
+      }
     }
   },
   mounted() {}
@@ -190,7 +201,7 @@ export default {
 .ctIcons:hover {
   cursor: pointer;
   color: #7f88e6;
-  background: rgba(24, 27, 58, 0.71);
+  /* background: rgba(24, 27, 58, 0.71); */
 }
 
 #meuns {
