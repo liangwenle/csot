@@ -8,12 +8,17 @@
     <TopNav></TopNav>
     <LeftTarget></LeftTarget>
     <!-- 浮动弹框 -->
-    <MyDialog :visible.sync="diaLogs.a">
-      <h1 slot="header">页面标题</h1>
-        <p >主要内容的一个段落。</p>
-        <p>另一个主要段落。</p>
-        <p slot="footer">这里有一些联系信息</p>
+    <MyDialog :visible.sync="diaLogs.a" :sytop='280' :syleft='10'>
+      <h3 slot="header">温馨提示</h3>
+        <br>
+        <p>1 今日厂区内各个设备能耗正常</p>
+        <br>
+        <p>2 处理废料车队中，有故障车辆</p>
+        <!-- <p slot="footer">这里有一些联系信息</p> -->
+        <br>
     </MyDialog>
+
+    <BDPower></BDPower>
   </div>
 </template>
 
@@ -25,10 +30,11 @@ import TopTitle from "@/components/TopTitle";
 import MainChart from "@/components/MainChart";
 import LeftTarget from "@/components/LeftTarget";
 import MyDialog from "@/components/MyDialog";
+import BDPower from "@/components/BdPower";
 
 export default {
   name: "Home",
-  components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog },
+  components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog, BDPower },
 
   data() {
     return {
@@ -39,7 +45,7 @@ export default {
     ...mapGetters(["diaLogs"])
   },
   methods: {
-    ...mapActions(["setDiaLogs"]),
+    ...mapActions(["setDiaLogs"])
   },
   mounted() {}
 };

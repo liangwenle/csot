@@ -102,6 +102,8 @@ export default {
             },
             {
               title: "统计分析"
+            },{
+              title: "固废车辆追踪"
             }
           ]
         },
@@ -121,11 +123,11 @@ export default {
     ...mapActions(["setDiaLogs", "setChartType"]),
     ckCT(meun,i) {
       if(i==0){
-        this.setChartType(0);
+        // this.setChartType(0);
       } else if (i == 1) {
-        this.setChartType(1);
+        // this.setChartType(1);
       } else if (i == 2) {
-        this.setChartType(2);
+        // this.setChartType(2);
       } else if (i == 3) {
         this.setDiaLogs(["a", true]);
         meun.isdot = false;
@@ -154,6 +156,9 @@ export default {
       l1.show = false;
       if(i==1){
           this.setChartType(1)
+      }else if(i==2){
+        if(j==1) this.setDiaLogs(['b',true])
+        else if(j==2) this.setChartType(2);
       }
     }
   },

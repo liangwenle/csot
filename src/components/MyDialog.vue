@@ -1,6 +1,6 @@
 <template>
   <div v-show="copyVisible" class="myDialog"  draggable="true" @dragstart="dragstart" @dragend="drag"
-  style="top:300px;left:200px;"
+  :style="`top:${top}px;left:${left}px;`"
   >
   <div class="close" @click="close">
     <i class="el-icon-close"></i>
@@ -22,35 +22,33 @@ export default {
   name: "MyDialog",
   components: {},
   computed: {},
-  props: ["visible"],
+  props: ["visible",'sytop','syleft'],
   data() {
     return {
+      top: this.sytop||300,
+      left: this.syleft||200,
       copyVisible: this.visible,
       sx: null,
       sy: null
     };
   },
-  watch:{
-    visible(n,o){
+  watch: {
+   
+    visible(n, o) {
       this.copyVisible = n;
     }
   },
   methods: {
     dragstart(e) {
       // this.$emit("update:visible", false);
-      
       this.sx = e.clientX;
       this.sy = e.clientY;
     },
     drag(e) {
       let el = e.currentTarget;
-      let topNo = parseInt(getComputedStyle(el).top.replace(/px/,''))
-      let leftNo = parseInt(getComputedStyle(el).left.replace(/px/,''))
-
-      el.style.top = `${e.clientY-this.sy+topNo}px`;
-      el.style.left = `${e.clientX-this.sx+leftNo}px`;
+      this.top = e.clientY - this.sy + this.top
+      this.left = e.clientX - this.sx + this.left
       // this.$emit("update:visible", true);
-      
     },
     close() {
       this.$emit("update:visible", false);
@@ -68,7 +66,7 @@ export default {
   color: #eee;
   padding: 10px;
 }
-.close{
+.close {
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -81,7 +79,7 @@ export default {
   background: #20234c;
   color: #999;
 }
-.close:hover{
+.close:hover {
   cursor: pointer;
 }
 </style>
