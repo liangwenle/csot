@@ -309,7 +309,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["setChartType"]),
+    ...mapActions(["setChartType","setDiaLogs"]),
 
     guangDongMapFormJS() {
       this.chart.setOption({
@@ -679,6 +679,9 @@ export default {
       };
       this[domId].setOption(option, { notMerge: true });
       this[domId].resize();
+       this[domId].on("click", p => {
+         this.setDiaLogs(['b',true])
+      });
     },
     drowBMapChart() {
       let domId = "bmapchart";
