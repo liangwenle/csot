@@ -98,13 +98,13 @@ export default {
 
           level: [
             {
-              title: "热力情况"
+              title: "能源流向"
             },
             {
               title: "统计分析"
-            },{
+            }/* ,{
               title: "固废车辆追踪"
-            }
+            } */
           ]
         },
         {
@@ -157,7 +157,8 @@ export default {
       if(i==1){
           this.setChartType(1)
       }else if(i==2){
-        if(j==1) this.setDiaLogs(['b',true])
+         if(j==0) this.setDiaLogs(['c',true])
+        else if(j==1) this.setDiaLogs(['b',true])
         else if(j==2) this.setChartType(2);
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="bdpower">
-    <MyDialog  :visible.sync="diaLogs.b" :sytop='130' :syleft='90' >
+    <MyDialog  :visible.sync="diaLogs.b" :sytop='60' :syleft='40' >
        <!-- <el-row>
         <el-col :span="24"><div class="grid-content bg-purple-dark"></div></el-col> -->
       <!-- </el-row> -->
@@ -179,7 +179,7 @@ export default {
 #abc,
 #abc2 {
   /* float: left; */
-  width: 700px;
-  height: 400px;
+  width: 1000px;
+  height: 500px;
 }
 </style>

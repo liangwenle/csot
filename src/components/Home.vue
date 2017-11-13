@@ -19,6 +19,7 @@
     </MyDialog>
 
     <BDPower></BDPower>
+    <LiuXiang></LiuXiang>
   </div>
 </template>
 
@@ -31,10 +32,11 @@ import MainChart from "@/components/MainChart";
 import LeftTarget from "@/components/LeftTarget";
 import MyDialog from "@/components/MyDialog";
 import BDPower from "@/components/BdPower";
+import LiuXiang from "@/components/LiuXiang";
 
 export default {
   name: "Home",
-  components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog, BDPower },
+  components: { TopTitle, TopNav, MainChart, LeftTarget, MyDialog, BDPower ,LiuXiang},
 
   data() {
     return {
